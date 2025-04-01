@@ -3,18 +3,21 @@ import csv
 #############################################################################################
 movies = {}
 # Reading from CSV
-with open('340_folder/movies.csv', mode='r') as file:
-    csv_reader = csv.DictReader(file)
-    
-    # Process each row and convert it into the required dictionary format
-    for row in csv_reader:
-        title = row['Title'] 
-        movies[title] = {
-            "year": int(row['Year']), 
-            "genre": row['Genre'],
-            "director": row['Director'],
-            "actors": [actor.strip() for actor in row['Actors'].split(',')]  # Split actors and strip any extra spaces
-        }
+with open('movies.csv', mode='r') as file:
+    try: 
+        csv_reader = csv.DictReader(file)
+        
+        # Process each row and convert it into the required dictionary format
+        for row in csv_reader:
+            title = row['Title'] 
+            movies[title] = {
+                "year": int(row['Year']), 
+                "genre": row['Genre'],
+                "director": row['Director'],
+                "actors": [actor.strip() for actor in row['Actors'].split(',')]  # Split actors and strip any extra spaces
+            }
+    except:
+        print("File not found")
 
 #############################################################################################
 
@@ -112,7 +115,7 @@ header_for_csv = ["Title", "Year", "Genre", "Director", "Actors"]
 
 # Writing to CSV
 
-with open('340_folder/movies.csv', mode='w', newline='') as file:
+with open('movies.csv', mode='w', newline='') as file:
     writer = csv.DictWriter(file, fieldnames=header_for_csv)
 
     writer.writeheader()
