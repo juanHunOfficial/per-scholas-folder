@@ -32,6 +32,8 @@ def edit_movie_obj(movies: dict, selection: str) -> None:
         movie.append(input(f"Enter the {category}: "))
     for _ in range(3):
         actors.append(input("Enter in an actor from your film: "))
+    while len(movie[1]) is not 4:
+        movie[1] = input("Your year was not valid, enter a 4 digit year for the movie: ") 
 
     movies.update(
         {movie[0] : {
