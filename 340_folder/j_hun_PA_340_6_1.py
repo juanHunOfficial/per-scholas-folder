@@ -1,65 +1,20 @@
-movies = {
-    "The Shawshank Redemption": {
-        "year": 1994,
-        "genre": "Drama",
-        "director": "Frank Darabont",
-        "actors": ["Tim Robbins", "Morgan Freeman", "Bob Gunton"]
-    },
-    "The Godfather": {
-        "year": 1972,
-        "genre": "Crime, Drama",
-        "director": "Francis Ford Coppola",
-        "actors": ["Marlon Brando", "Al Pacino", "James Caan"]
-    },
-    "The Dark Knight": {
-        "year": 2008,
-        "genre": "Action, Crime, Drama",
-        "director": "Christopher Nolan",
-        "actors": ["Christian Bale", "Heath Ledger", "Aaron Eckhart"]
-    },
-    "Forrest Gump": {
-        "year": 1994,
-        "genre": "Drama, Romance",
-        "director": "Robert Zemeckis",
-        "actors": ["Tom Hanks", "Robin Wright", "Gary Sinise"]
-    },
-    "Inception": {
-        "year": 2010,
-        "genre": "Action, Adventure, Sci-Fi",
-        "director": "Christopher Nolan",
-        "actors": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Ellen Page"]
-    },
-    "Fight Club": {
-        "year": 1999,
-        "genre": "Drama",
-        "director": "David Fincher",
-        "actors": ["Brad Pitt", "Edward Norton", "Helena Bonham Carter"]
-    },
-    "The Matrix": {
-        "year": 1999,
-        "genre": "Action, Sci-Fi",
-        "director": "The Wachowskis",
-        "actors": ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"]
-    },
-    "Pulp Fiction": {
-        "year": 1994,
-        "genre": "Crime, Drama",
-        "director": "Quentin Tarantino",
-        "actors": ["John Travolta", "Uma Thurman", "Samuel L. Jackson"]
-    },
-    "Gladiator": {
-        "year": 2000,
-        "genre": "Action, Adventure, Drama",
-        "director": "Ridley Scott",
-        "actors": ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen"]
-    },
-    "The Social Network": {
-        "year": 2010,
-        "genre": "Biography, Drama",
-        "director": "David Fincher",
-        "actors": ["Jesse Eisenberg", "Andrew Garfield", "Justin Timberlake"]
-    }
-}
+import csv
+
+#############################################################################################
+movies = {}
+# Reading from CSV
+with open('340_folder/movies.csv', mode='r') as file:
+    csv_reader = csv.DictReader(file)
+    
+    # Process each row and convert it into the required dictionary format
+    for row in csv_reader:
+        title = row['Title'] 
+        movies[title] = {
+            "year": int(row['Year']), 
+            "genre": row['Genre'],
+            "director": row['Director'],
+            "actors": [actor.strip() for actor in row['Actors'].split(',')]  # Split actors and strip any extra spaces
+        }
 
 #############################################################################################
 
@@ -75,7 +30,7 @@ def edit_movie_obj(movies: dict, selection: str) -> None:
     actors = []
     for category in categories:
         movie.append(input(f"Enter the {category}: "))
-    for i in range(3):
+    for _ in range(3):
         actors.append(input("Enter in an actor from your film: "))
 
     movies.update(
@@ -135,3 +90,29 @@ while response is not "0":
                  5) Search movies
                  0) EXIT
 """)
+
+#############################################################################################
+
+# Reading and Writing to CSV
+# Updates to the original set of data will save after the changes have been made after the user exits the program ( while loop )
+data_in_rows_format = [] # init the empty list that will contain objects for each row.
+for title, details in movies.items():
+    data_set = {
+        "Title" : title,
+        "Year" : details["year"],
+        "Genre" : details["genre"],
+        "Director" : details["director"],
+        "Actors": ", ".join(details["actors"])
+    }
+    data_in_rows_format.append(data_set)
+
+header_for_csv = ["Title", "Year", "Genre", "Director", "Actors"]
+
+# Writing to CSV
+
+with open('340_folder/movies.csv', mode='w', newline='') as file:
+    writer = csv.DictWriter(file, fieldnames=header_for_csv)
+
+    writer.writeheader()
+
+    writer.writerows(data_in_rows_format)
